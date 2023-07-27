@@ -42,7 +42,7 @@ namespace lab12a.Models.Services
             {
 
 
-                throw new("hotel not found");
+                throw new("Hotel not found");
             }
             existingHotel.Name = hotel.Name;
             existingHotel.Phone = hotel.Phone;

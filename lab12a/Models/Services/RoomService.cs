@@ -44,7 +44,7 @@ namespace lab12a.Models.Services
             {
 
 
-                throw new("Course not found");
+                throw new("Room not found");
             }
             existingRoom.Name = room.Name;
             existingRoom.Layout = room.Layout;
