@@ -63,8 +63,8 @@ namespace lab12a.Models.Services
             await _context.SaveChangesAsync();
             var room = await GetRoomById(roomId);
             return room;
-
-
+            //maybe without <Room>
+            //comment
         }
 
         public async Task<Room> GetRoomById(int roomId)
