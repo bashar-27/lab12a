@@ -41,7 +41,7 @@ namespace lab12a.Models.Services
             {
 
 
-                throw new("Amenity is not found");
+                throw new("Amenity not found");
             }
             existingAmen.Name = amen.Name;
 
