@@ -9,8 +9,8 @@
         public decimal Rate { get; set; }
         public bool PetFriendly { get; set; }
 
-        public Room room { get; set; }
-        public Hotel hotel { get; set; }
+        public Room? room { get; set; }
+        public Hotel? hotel { get; set; }
 
     }
 }
