@@ -18,14 +18,14 @@ namespace lab12a.Controller
     {
         private readonly IHotelRoom _Hroom;
 
-        public HotelRoomsController(IHotelRoom context)
+        public HotelRoomsController(IHotelRoom _context)
         {
-            _Hroom = context;
+            _Hroom = _context;
         }
 
         // GET: api/HotelRooms
         [HttpGet]
-        [Route("{hotelId}/Rooms")]
+        [Route("{hotelId}")]
         public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms(int hotelId)
         {
             return await _Hroom.GetHotelRooms(hotelId);
@@ -34,7 +34,7 @@ namespace lab12a.Controller
 
         // GET: api/HotelRooms/5
         [HttpGet]
-        [Route("{hotelId}/Rooms/{roomNumber}")]
+        [Route("Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<HotelRoom>> GetHotelRoom(int hotelId, int roomNumber)
         {
             var hotelRoom = await _Hroom.GetHotelRoom(hotelId, roomNumber);
@@ -50,12 +50,12 @@ namespace lab12a.Controller
         // PUT: api/HotelRooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        [Route("{hotelId}/Rooms/{roomNumber}")]
+        [Route("Hotels/{hotelId}/Rooms/{roomNumber}")]
         public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
         {
             try
             {
-                await _Hroom.UpdateRoom(hotelId, roomNumber, hotelRoom.RoomId, hotelRoom.Rate, hotelRoom.PetFriendly);
+                await _Hroom.UpdateRoom(hotelId, roomNumber, hotelRoom);
                 return Ok();
             }
             catch (Exception ex)
@@ -68,14 +68,10 @@ namespace lab12a.Controller
         // POST: api/HotelRooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("{hotelId}/Rooms")]
-        public async Task<ActionResult<HotelRoom>> PostHotelRoom(int hotelId,HotelRoom hotelRoom)
+        [Route("Hotels/{hotelId}/Rooms")]    
+        public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
         {
-            {
-                var createdRoom = await _Hroom.CreateHotelRoom(hotelId, hotelRoom.RoomNumber, hotelRoom.RoomId, hotelRoom.Rate, hotelRoom.PetFriendly);
-                return CreatedAtAction(nameof(GetHotelRoom), new { hotelId, roomNumber = createdRoom.RoomNumber }, createdRoom);
-
-            }
+            return await _Hroom.CreateHotelRoom(hotelRoom);
         }
 
         // DELETE: api/HotelRooms/5
@@ -94,9 +90,6 @@ namespace lab12a.Controller
             return (IActionResult)hotelRoom;
         }
 
-        private bool HotelRoomExists(int hotelId)
-        {
-            return _Hroom.GetHotelRooms(hotelId).Result.Any(e => e.HotelId == hotelId);
-        }
+     
     }
 }
