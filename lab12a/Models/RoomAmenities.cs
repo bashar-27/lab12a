@@ -8,8 +8,8 @@ namespace lab12a.Models
 
         public int RoomID { get; set; }
 
-        public Room room { get; set; }
-        public Amenities amenities { get; set; }
+        public Room? room { get; set; }
+        public Amenities? amenities { get; set; }
 
     }
 }

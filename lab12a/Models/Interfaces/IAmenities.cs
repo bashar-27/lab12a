@@ -1,19 +1,20 @@
 ﻿using lab12a.Models;
+using lab12a.Models.DTO;
 
 namespace lab12a.Models.Interfaces
 {
     public interface IAmenities
     {
         //Create
-        Task<Amenities> CreateAmenities(Amenities amen);
+        Task<AmenitiesDto> CreateAmenities(AmenitiesDto amenDto);
 
         //Get All Amenities
-        Task<List<Amenities>> GetAmenities();
+        Task<List<AmenitiesDto>> GetAmenities();
         //Get Amenities By ID
-        Task<Amenities> GetAmenityById(int amenID);
+        Task<AmenitiesDto> GetAmenityById(int amenID);
 
         //Update
-        Task<Amenities> UpdateAmenities(Amenities amen, int id);
+        Task UpdateAmenities(AmenitiesDto amen);
 
         //Delete
         Task Delete(int id);

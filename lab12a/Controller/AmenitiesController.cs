@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using lab12a.Data;
 using lab12a.Models;
 using lab12a.Models.Interfaces;
+using lab12a.Models.DTO;
 
 namespace lab12a.Controller
 {
@@ -24,47 +25,64 @@ namespace lab12a.Controller
 
         // GET: api/Amenities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenities>>> Getamenities()
+        public async Task<ActionResult<IEnumerable<AmenitiesDto>>> Getamenities()
         {
             return await _amenity.GetAmenities();
         }
 
         // GET: api/Amenities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenities>> GetAmenityById(int id)
+        public async Task<ActionResult<AmenitiesDto>> GetAmenityById(int id)
         {
-            var amenities = await _amenity.GetAmenityById(id);
-            return amenities;
+            var amenitiesDto = await _amenity.GetAmenityById(id);
+            return amenitiesDto;
         }
 
         // PUT: api/Amenities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAmenities(Amenities amenities, int id)
+        public async Task<IActionResult> PutAmenities(AmenitiesDto amenitiesDto, int id)
         {
-            if (id != amenities.Id)
+            if (id != amenitiesDto.Id)
             {
                 return BadRequest();
             }
-            var updAmen = await _amenity.UpdateAmenities(amenities, id);
-            return Ok(updAmen);
+            try
+            {
+                await _amenity.UpdateAmenities(amenitiesDto);
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                if(amenitiesDto.Id != id)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+          
+            return NoContent();
         }
 
         // POST: api/Amenities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Amenities>> PostAmenities(Amenities amenities)
+        public async Task<ActionResult<AmenitiesDto>> PostAmenities(AmenitiesDto amenitiesDto)
         {
+            await _amenity.CreateAmenities(amenitiesDto);
 
-            return CreatedAtAction("GetAmenityById", new { id = amenities.Id }, amenities);
+            return CreatedAtAction("GetAmenityById", new { id = amenitiesDto.Id }, amenitiesDto);
         }
 
         // DELETE: api/Amenities/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAmenities(int id)
+        public async Task<ActionResult<AmenitiesDto>> DeleteAmenities(int id)
         {
+            var amenDto = await _amenity.GetAmenityById(id);
             await _amenity.Delete(id);
-            return NoContent();
+            return Ok();
         }
 
 
