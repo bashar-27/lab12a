@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using lab12a.Data;
 using lab12a.Models;
 using lab12a.Models.Interfaces;
+using lab12a.Models.DTO;
 
 namespace lab12a.Controller
 {
@@ -21,17 +22,17 @@ namespace lab12a.Controller
         {
             _hotel = hotel;
         }
-
+        
         // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelAsync()
+        public async Task<ActionResult<IEnumerable<HotelDto>>> GetHotelAsync()
         {
             return await _hotel.GetHotelAsync();
         }
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotelById(int id)
+        public async Task<ActionResult<HotelDto>> GetHotelById(int id)
         {
             var hotel = await _hotel.GetHotelById(id);
             return hotel;
@@ -44,31 +45,29 @@ namespace lab12a.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHotel(Hotel hotel, int id)
         {
-            if (id != hotel.Id)
-            {
-                return BadRequest();
-            }
+            
 
-            var updateHotelInfo = await _hotel.UpdateHotel(hotel, id);
-            return Ok(updateHotelInfo);
+            await _hotel.UpdateHotel(hotel,id);
+           return Ok();
         }
 
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        public async Task<ActionResult<HotelDto>> PostHotel(Hotel hotel)
         {
-            return await _hotel.CreateHotel(hotel);
-            //  return CreatedAtAction("GetCourseById",new {id = hotel.Id},hotel);
+             await _hotel.CreateHotel(hotel);
+              return Ok(hotel);
         }
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteHotel(int id)
+        public async Task<ActionResult> DeleteHotel(int id)
         {
-            await _hotel.Delete(id);
-            return NoContent();
+           return Ok(await _hotel.Delete(id));
         }
+
+       
 
 
     }

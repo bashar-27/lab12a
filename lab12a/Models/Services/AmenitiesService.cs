@@ -14,6 +14,11 @@ namespace lab12a.Models.Services
         {
             _context = context;
         }
+        /// <summary>
+        /// Creates a new amenity and adds it to the database.
+        /// </summary>
+        /// <param name="amen">The amenity to be created.</param>
+        /// <returns>A DTO representation of the created amenity.</returns>
         public async Task<AmenitiesDto> CreateAmenities(AmenitiesDto amen)
         {
             Amenities amenity = new Amenities();
@@ -25,6 +30,11 @@ namespace lab12a.Models.Services
             amen.Id = amenity.Id;
             return amen;
         }
+
+        /// <summary>
+        /// Retrieves a list of all amenities along with their details.
+        /// </summary>
+        /// <returns>A list of DTO representations of amenities.</returns>
         public async Task<List<AmenitiesDto>> GetAmenities()
         {
             var allAmenities = await _context.amenities.ToListAsync();
@@ -38,7 +48,10 @@ namespace lab12a.Models.Services
             return listDto;
             
         }
-
+        /// <summary>
+        /// Deletes an amenity based on its ID from the database.
+        /// </summary>
+        /// <param name="id">The ID of the amenity to delete.</param>
         public async Task Delete(int id)
         {
             var amenity = await _context.amenities.FindAsync(id);
@@ -48,6 +61,12 @@ namespace lab12a.Models.Services
         }
 
 
+
+
+        /// <summary>
+        /// Updates the details of an existing amenity in the database.
+        /// </summary>
+        /// <param name="amen">The updated amenity details.</param>
         public async Task UpdateAmenities(AmenitiesDto amen)
         {
 
@@ -58,7 +77,11 @@ namespace lab12a.Models.Services
             await _context.SaveChangesAsync();
             
         }
-
+        /// <summary>
+        /// Retrieves an amenity by its ID along with its details.
+        /// </summary>
+        /// <param name="id">The ID of the amenity to retrieve.</param>
+        /// <returns>A DTO representation of the retrieved amenity.</returns>
         public async Task<AmenitiesDto> GetAmenityById(int id)
         {
             var amenity = await _context.amenities.FindAsync(id);

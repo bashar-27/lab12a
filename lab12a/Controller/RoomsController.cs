@@ -41,14 +41,14 @@ namespace lab12a.Controller
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, RoomDto room)
+        public async Task<IActionResult> PutRoom(Room room,int id)
         {
-            if (id != room.Id)
+            if (id != room.ID)
             {
                 return BadRequest();
             }
 
-             await _room.UpdateRoom(room);
+             await _room.UpdateRoom(room,id);
             return Ok();
         }
 
@@ -56,10 +56,10 @@ namespace lab12a.Controller
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         //[Route("{roomId}/{amenitiesID}")]
-        public async Task<ActionResult<RoomDto>> PostRoom(RoomDto room)
+        public async Task<ActionResult<RoomDto>> PostRoom(Room room)
         {
-            await _room.UpdateRoom(room);
-            return CreatedAtAction("GetRoom", new { id = room.Id }, room);
+            
+            return await _room.CreateRoom(room);
         }
 
         // DELETE: api/Rooms/5
@@ -67,14 +67,25 @@ namespace lab12a.Controller
       
         public async Task<ActionResult<RoomDto>> DeleteRoom(int roomId)
         {
-            var roomDto = await _room.GetRoomById(roomId);
-            if(roomDto == null)
-                return NotFound();
+           
 
             await _room.Delete(roomId);
 
             return Ok();
 
+        }
+        [HttpPost]
+        [Route("{roomId}/Amenities/{amenityId}")]
+        public async Task<RoomAmenities> PostRoomaded(int roomId, int amenityId)
+        {
+            return await _room.AddAmenityToRoom(roomId, amenityId);
+        }
+
+        [HttpDelete]
+        [Route("{roomId}/Amenities/{amenityId}")]
+        public async Task<RoomAmenities> DeleteRoomaded(int roomId, int amenityId)
+        {
+            return await _room.RemoveAmentityFromRoom(roomId, amenityId);
         }
 
     }
