@@ -9,6 +9,7 @@ using lab12a.Data;
 using lab12a.Models;
 using lab12a.Models.Interfaces;
 using lab12a.Models.Services;
+using lab12a.Models.DTO;
 
 namespace lab12a.Controller
 {
@@ -25,24 +26,19 @@ namespace lab12a.Controller
 
         // GET: api/HotelRooms
         [HttpGet]
-        [Route("{hotelId}")]
-        public async Task<ActionResult<IEnumerable<HotelRoom>>> GetHotelRooms(int hotelId)
+        
+        public async Task<ActionResult<IEnumerable<HotelRoomDto>>> GetHotelRooms()
         {
-            return await _Hroom.GetHotelRooms(hotelId);
+            return await _Hroom.GetHotelRooms();
         }
 
 
         // GET: api/HotelRooms/5
         [HttpGet]
-        [Route("Hotels/{hotelId}/Rooms/{roomNumber}")]
-        public async Task<ActionResult<HotelRoom>> GetHotelRoom(int hotelId, int roomNumber)
+        [Route("{hotelId}/Rooms/{roomNumber}")]
+        public async Task<ActionResult<HotelRoomDto>> GetHotelRoom(int hotelId, int roomNumber)
         {
             var hotelRoom = await _Hroom.GetHotelRoom(hotelId, roomNumber);
-
-            if (hotelRoom == null)
-            {
-                return NotFound();
-            }
 
             return hotelRoom;
         }
@@ -50,46 +46,35 @@ namespace lab12a.Controller
         // PUT: api/HotelRooms/5
         // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        [Route("Hotels/{hotelId}/Rooms/{roomNumber}")]
+        [Route("{hotelId}/Rooms/{roomNumber}")]
         public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
         {
-            try
-            {
-                await _Hroom.UpdateRoom(hotelId, roomNumber, hotelRoom);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception if needed
-                return StatusCode(500, "An error occurred while updating the hotel room.");
-            }
+
+            await _Hroom.UpdateRoom(hotelId, roomNumber, hotelRoom);
+            return Ok();
+
         }
 
         // POST: api/HotelRooms
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("Hotels/{hotelId}/Rooms")]    
-        public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
+     
+        public async Task<ActionResult<HotelRoomDto>> PostHotelRoom(HotelRoom hotelRoom)
         {
-            return await _Hroom.CreateHotelRoom(hotelRoom);
+            await _Hroom.CreateHotelRoom(hotelRoom);
+            return Ok(hotelRoom);
         }
 
         // DELETE: api/HotelRooms/5
         [HttpDelete]
         [Route("{hotelId}/Rooms/{roomNumber}")]
-        public async Task<IActionResult> DeleteHotelRoom(int hotelId, int roomNumber)
+        public async Task<ActionResult<HotelRoomDto>> DeleteHotelRoom(int hotelId, int roomNumber)
         {
-            var hotelRoom = await _Hroom.GetHotelRoom(hotelId, roomNumber);
-            if (hotelRoom == null)
-            {
-                return NotFound();
-            }
+
 
             await _Hroom.DeleteHotelRoom(hotelId, roomNumber);
 
-            return (IActionResult)hotelRoom;
+            return NoContent();
         }
-
-     
     }
 }

@@ -11,6 +11,6 @@
 
         public Room? room { get; set; }
         public Hotel? hotel { get; set; }
-
+      
     }
 }
