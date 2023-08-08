@@ -7,7 +7,7 @@
 namespace lab12a.Migrations
 {
     /// <inheritdoc />
-    public partial class AllTabels : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,11 +18,17 @@ namespace lab12a.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AmenitiesId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_amenities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_amenities_amenities_AmenitiesId",
+                        column: x => x.AmenitiesId,
+                        principalTable: "amenities",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -35,7 +41,7 @@ namespace lab12a.Migrations
                     StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -49,8 +55,8 @@ namespace lab12a.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Layout = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Layout = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -110,12 +116,12 @@ namespace lab12a.Migrations
 
             migrationBuilder.InsertData(
                 table: "amenities",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "AmenitiesId", "Name" },
                 values: new object[,]
                 {
-                    { 1, "AC" },
-                    { 2, "coffeeBar" },
-                    { 3, "Fridge" }
+                    { 1, null, "AC" },
+                    { 2, null, "coffeeBar" },
+                    { 3, null, "Fridge" }
                 });
 
             migrationBuilder.InsertData(
@@ -137,6 +143,11 @@ namespace lab12a.Migrations
                     { 2, 2, "red" },
                     { 3, 3, "white" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_amenities_AmenitiesId",
+                table: "amenities",
+                column: "AmenitiesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_hotel_rooms_RoomId",
