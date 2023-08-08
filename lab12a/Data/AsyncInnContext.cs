@@ -1,11 +1,12 @@
 ﻿using lab12a.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
 namespace lab12a.Data
 {
-    public class AsyncInnContext : DbContext
+    public class AsyncInnContext : IdentityDbContext<AppUser>
     {
         public AsyncInnContext(DbContextOptions options) : base(options)
         {
@@ -13,6 +14,8 @@ namespace lab12a.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<HotelRoom>().HasKey(e => new { e.HotelId, e.RoomNumber });
             modelBuilder.Entity<RoomAmenities>().HasKey(x => new { x.RoomID, x.AmenitiesID });
 

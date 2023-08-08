@@ -1,8 +1,10 @@
 using lab12a.Data;
 using lab12a.Models.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using lab12a.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using lab12a.Models;
 
 namespace lab12a
 {
@@ -12,17 +14,24 @@ namespace lab12a
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 
             string conn = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services
                 .AddDbContext<AsyncInnContext>
             (options => options.UseSqlServer(conn));
+            builder.Services.AddIdentity<AppUser, IdentityRole>(option =>
+            {
+                option.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<AsyncInnContext>();
 
+            builder.Services.AddTransient<IUser, IdentityUserService>();
             builder.Services.AddTransient<IHotel, HotelService>();
             builder.Services.AddTransient<IRoom, RoomService>();
             builder.Services.AddTransient<IAmenities, AmenitiesService>();
             builder.Services.AddTransient<IHotelRoom, HotelRoomService>();
-           
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
