@@ -268,3 +268,13 @@ Token Verification: On the server-side, the incoming JWT is validated by verifyi
 Authorization: After verifying the token, the server can access the claims within the JWT to determine the user's identity, roles, and permissions. Based on these claims, the server can then authorize or deny access to protected resources or actions.
 
 JWT authentication is stateless, meaning the server does not need to store any session information for each user, which makes it scalable and suitable for distributed systems
+
+<hr>
+
+## Lab19 
+
+This is the part that spreates between the user (Agents ) and the (property mangers) and the (District manger) and shows wat can thety access and what can they do : for example : district manger can do all the opreations on the api as he has the full accesson the controllers the property manager can add/update/read new HotelRooms to hotels, and amenities to rooms. the agent can only update/read a HotelRoom and add/delete amenities to rooms. so the agent "can't" delete a hotelRoom . as he is only an agent .Last thing AllowAnonymous can just read(Get).
+
+## UnitX
+![Screenshot 2023-08-12 204822](https://github.com/bashar-27/lab12a/assets/83985765/559dc40f-1c32-433c-946a-56635eeb1b45)
+
