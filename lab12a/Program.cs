@@ -18,7 +18,7 @@ namespace lab12a
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-
+            //to create db
             string conn = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services
                 .AddDbContext<AsyncInnContext>
@@ -34,7 +34,9 @@ namespace lab12a
             builder.Services.AddTransient<IRoom, RoomService>();
             builder.Services.AddTransient<IAmenities, AmenitiesService>();
             builder.Services.AddTransient<IHotelRoom, HotelRoomService>();
-          
+
+            //Idk
+            int x;
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -12,7 +12,7 @@ namespace hotelTest
         [Fact]
         public async Task DistrictManager_CanCreateRoom()
         {
-            // Arrange
+           
             var districtManagerRole = new IdentityRole { Name = "District Manager" };
             var userManager = MockUserManager.GetMockUserManager<AppUser>();
             userManager.Setup(um => um.GetRolesAsync(It.IsAny<AppUser>()))
@@ -25,7 +25,7 @@ namespace hotelTest
             };
 
             // Act
-            var roomService = new RoomService(_db, userManager.Object); // Replace with your RoomService implementation
+            var roomService = new RoomService(_db, userManager.Object); 
             var result = await roomService.CreateRoom(roomToCreate);
 
             // Assert
