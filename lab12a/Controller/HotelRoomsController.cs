@@ -10,9 +10,12 @@ using lab12a.Models;
 using lab12a.Models.Interfaces;
 using lab12a.Models.Services;
 using lab12a.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace lab12a.Controller
 {
+    [Authorize(Roles = "District Manager")]
     [Route("api/[controller]")]
     [ApiController]
     public class HotelRoomsController : ControllerBase
@@ -25,6 +28,9 @@ namespace lab12a.Controller
         }
 
         // GET: api/HotelRooms
+        [AllowAnonymous]
+        [Authorize(Roles = "Agent")]
+        [Authorize(Roles = "Property Manager")]
         [HttpGet]
         
         public async Task<ActionResult<IEnumerable<HotelRoomDto>>> GetHotelRooms()
@@ -34,6 +40,9 @@ namespace lab12a.Controller
 
 
         // GET: api/HotelRooms/5
+        [AllowAnonymous]
+        [Authorize(Roles = "Agent")]
+        [Authorize(Roles = "Property Manager")]
         [HttpGet]
         [Route("{hotelId}/Rooms/{roomNumber}")]
         public async Task<ActionResult<HotelRoomDto>> GetHotelRoom(int hotelId, int roomNumber)
@@ -45,6 +54,8 @@ namespace lab12a.Controller
 
         // PUT: api/HotelRooms/5
         // To protect from over posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Agent")]
+        [Authorize(Roles = "Property Manager")]
         [HttpPut]
         [Route("{hotelId}/Rooms/{roomNumber}")]
         public async Task<IActionResult> PutHotelRoom(int hotelId, int roomNumber, HotelRoom hotelRoom)
@@ -56,7 +67,9 @@ namespace lab12a.Controller
         }
 
         // POST: api/HotelRooms
+
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Property Manager")]
         [HttpPost]
      
         public async Task<ActionResult<HotelRoomDto>> PostHotelRoom(HotelRoom hotelRoom)

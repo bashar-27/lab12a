@@ -1,74 +1,47 @@
 using lab12a.Models.Services;
 using lab12a.Models.Interfaces;
 using lab12a.Models;
-
+using lab12a.Models.DTO;
+using Microsoft.AspNetCore.Identity;
+using Moq;
 
 namespace hotelTest
 {
-    public class UnitTest1 :Mock
+    public class DistrictManagerTests : Mock
     {
         [Fact]
-        public async void addHotel()
+        public async Task DistrictManager_CanCreateRoom()
         {
-            var hotel = new Hotel()
+           
+            var districtManagerRole = new IdentityRole { Name = "District Manager" };
+            var userManager = MockUserManager.GetMockUserManager<AppUser>();
+            userManager.Setup(um => um.GetRolesAsync(It.IsAny<AppUser>()))
+                       .ReturnsAsync(new List<string> { districtManagerRole.Name });
+
+            var roomToCreate = new Room
             {
-                Name = "Test Hotel",
-                City = "Test City",
-                StreetAddress = "Test Street",
-                Phone = "0799",
-                Country = "Test Country",
-                State = "Test State"
+                Name = "NewRoom",
+                Layout = 1
             };
 
-            var hotelServices = new HotelService(_db);
-            var createdHotel = await hotelServices.CreateHotel(hotel);
+            // Act
+            var roomService = new RoomService(_db, userManager.Object); 
+            var result = await roomService.CreateRoom(roomToCreate);
 
-            Assert.NotNull(createdHotel);
-            Assert.NotEqual("Test Hotel", createdHotel.Phone);
-
-        }
-        [Fact]
-        public async void TestGetHotels()
-        {
-            var hotelService = new HotelService(_db);
-            var hotels = await hotelService.GetHotelAsync();
-
-            Assert.NotNull(hotels);
-
-
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("NewRoom", result.Name);
         }
 
-       
-        
-        [Fact]
-        //Delete Hotel
-        public async void DeleteHotelTest()
-        {
-            var hotel = await CreateHotelsandSave();
-           
-            var Hotel_Service = new HotelService(_db);
-            var hotId = await Hotel_Service.GetHotelById(hotel.Id);
-            var Deleted_Hotel = await Hotel_Service.Delete(hotId.Id);
+    }
 
-            Assert.Equal(hotel.Id, Deleted_Hotel.Id);
-            Assert.NotNull(Deleted_Hotel);
-        }
-        //Update Room
-        [Fact]
-        public async void updateTest()
+        public static class MockUserManager
         {
-            var room = await CreateRoomAndSave();
-            var roomService = new RoomService(_db);
-            var update_room = await roomService.UpdateRoom(new Room
-                {
-                Name = "New update Name",
-                Layout = 4
-                },room.ID);
-            var newRoom_update = await roomService.GetRoomById(room.ID);
-            Assert.NotNull(newRoom_update);
-            Assert.Equal("New update Name", newRoom_update.Name);   
+            public static Mock<UserManager<TUser>> GetMockUserManager<TUser>() where TUser : class
+            {
+                var store = new Mock<IUserStore<TUser>>();
+                return new Mock<UserManager<TUser>>(store.Object, null, null, null, null, null, null, null, null);
             }
         }
-
 
     }

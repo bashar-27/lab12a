@@ -9,9 +9,12 @@ using lab12a.Data;
 using lab12a.Models;
 using lab12a.Models.Interfaces;
 using lab12a.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace lab12a.Controller
 {
+    [Authorize(Roles = "District Manager")]
     [Route("api/[controller]")]
     [ApiController]
     public class HotelsController : ControllerBase
@@ -22,8 +25,9 @@ namespace lab12a.Controller
         {
             _hotel = hotel;
         }
-        
+
         // GET: api/Hotels
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<HotelDto>>> GetHotelAsync()
         {
@@ -31,6 +35,7 @@ namespace lab12a.Controller
         }
 
         // GET: api/Hotels/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<HotelDto>> GetHotelById(int id)
         {

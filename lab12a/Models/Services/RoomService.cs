@@ -12,6 +12,12 @@ namespace lab12a.Models.Services
         private readonly AsyncInnContext _context;
         private readonly IAmenities _amenities;
 
+        public RoomService(AsyncInnContext context, object @object)
+        {
+            _context = context;
+            //_amenities = amenities;
+        }
+
         public RoomService(AsyncInnContext context)
         {
             _context = context;

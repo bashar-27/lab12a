@@ -1,7 +1,9 @@
 ﻿using lab12a.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Reflection.Emit;
 
 namespace lab12a.Data
@@ -35,8 +37,25 @@ namespace lab12a.Data
               new Amenities() { Id = 2, Name = "coffeeBar" },
               new Amenities() { Id = 3, Name = "Fridge" }
               );
+            seedRole(modelBuilder, "District Manager");
+            seedRole(modelBuilder, "Property Manager");
+            seedRole(modelBuilder, "Agent");
+            
 
             // Other configurations... 
+           
+        }
+        private void seedRole(ModelBuilder modelBuilder, string roleName)
+        {
+            var role = new IdentityRole
+            {
+                Id = roleName.ToLower(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.Empty.ToString()
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(role);
+
         }
         public DbSet<Hotel> hotels { get; set; }
         public DbSet<Room> rooms { get; set; }
