@@ -9,9 +9,12 @@ using lab12a.Data;
 using lab12a.Models;
 using lab12a.Models.Interfaces;
 using lab12a.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace lab12a.Controller
 {
+    [Authorize(Roles = "District Manager")]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomsController : ControllerBase
@@ -24,6 +27,7 @@ namespace lab12a.Controller
         }
 
         // GET: api/Rooms
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoomDto>>> Getrooms()
         {
@@ -31,6 +35,7 @@ namespace lab12a.Controller
         }
 
         // GET: api/Rooms/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDto>> GetRoom(int id)
         {
@@ -74,13 +79,14 @@ namespace lab12a.Controller
             return Ok();
 
         }
+        [Authorize(Roles = "Property Manager, Agent")]
         [HttpPost]
         [Route("{roomId}/Amenities/{amenityId}")]
         public async Task<RoomAmenities> PostRoomaded(int roomId, int amenityId)
         {
             return await _room.AddAmenityToRoom(roomId, amenityId);
         }
-
+        [Authorize(Roles = "Agent")]
         [HttpDelete]
         [Route("{roomId}/Amenities/{amenityId}")]
         public async Task<RoomAmenities> DeleteRoomaded(int roomId, int amenityId)

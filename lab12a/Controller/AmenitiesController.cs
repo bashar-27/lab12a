@@ -9,9 +9,12 @@ using lab12a.Data;
 using lab12a.Models;
 using lab12a.Models.Interfaces;
 using lab12a.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace lab12a.Controller
 {
+    [Authorize(Roles = "District Manager")]
     [Route("api/[controller]")]
     [ApiController]
     public class AmenitiesController : ControllerBase
@@ -24,6 +27,7 @@ namespace lab12a.Controller
         }
 
         // GET: api/Amenities
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AmenitiesDto>>> Getamenities()
         {
@@ -31,6 +35,7 @@ namespace lab12a.Controller
         }
 
         // GET: api/Amenities/5
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<AmenitiesDto>> GetAmenityById(int id)
         {
@@ -40,6 +45,7 @@ namespace lab12a.Controller
 
         // PUT: api/Amenities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Property Manager")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAmenities(AmenitiesDto amenitiesDto, int id)
         {
@@ -68,6 +74,7 @@ namespace lab12a.Controller
 
         // POST: api/Amenities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Property Manager, Agent")]
         [HttpPost]
         public async Task<ActionResult<AmenitiesDto>> PostAmenities(AmenitiesDto amenitiesDto)
         {
@@ -77,6 +84,7 @@ namespace lab12a.Controller
         }
 
         // DELETE: api/Amenities/5
+        [Authorize(Roles = "Agent")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<AmenitiesDto>> DeleteAmenities(int id)
         {

@@ -1,5 +1,6 @@
 ﻿using lab12a.Models.DTO;
 using lab12a.Models.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,12 @@ namespace lab12a.Controller
                 return Unauthorized();
             }
             return Ok(user);
+        }
+        [Authorize(Roles = "District Manager") ]
+        [HttpGet("Profile")]
+        public async Task<ActionResult<UserDto>>Profile()
+        {
+            return await _userService.GetUser(this.User);
         }
     }
 }

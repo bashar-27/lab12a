@@ -5,6 +5,7 @@ using lab12a.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using lab12a.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace lab12a
 {
@@ -27,11 +28,23 @@ namespace lab12a
                 option.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<AsyncInnContext>();
 
+            builder.Services.AddScoped<JwtTokenService>();
             builder.Services.AddTransient<IUser, IdentityUserService>();
             builder.Services.AddTransient<IHotel, HotelService>();
             builder.Services.AddTransient<IRoom, RoomService>();
             builder.Services.AddTransient<IAmenities, AmenitiesService>();
             builder.Services.AddTransient<IHotelRoom, HotelRoomService>();
+          
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(option =>
+            {
+                option.TokenValidationParameters = JwtTokenService.GetValidationParameters(builder.Configuration);
+            });
+
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
@@ -45,7 +58,10 @@ namespace lab12a
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
      );
             var app = builder.Build();
-           
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "/api/{documentName}/swagger.json";
@@ -56,7 +72,6 @@ namespace lab12a
                 options.SwaggerEndpoint("/api/v1/swagger.json", "AsyncInn API");
                 options.RoutePrefix = "docs";
             });
-
             app.MapControllers();
             app.MapGet("/", () => "Hello World!");
 
